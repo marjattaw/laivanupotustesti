@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Johannan ja Marjatan Laivanupotuspeli</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Johannan ja Marjatan Laivanupotuspeli</h1>
+    <p>Yritä löytää ja upottaa kaikki vastustajan laivat klikkaamalla ruutuja!</p>
+
+    <div class="game-container">
+        <!-- Pelaajan ruudukko -->
+        <div class="grid-section">
+            <h2>Pelaajan Ruudukko</h2>
+            <div class="grid" id="playerGrid"></div>
+        </div>
+
+        <!-- Keskellä oleva navigointipalkki pelin hallintapainikkeilla -->
+        <nav class="controls">
+            <button onclick="restartGame()">Aloita uusi peli</button>
+            <button onclick="showRules()">Pelin säännöt</button>
+            <button onclick="toggleBackgroundSound()">Taustaäänet päälle/pois</button>
+            <p id="message"></p>
+        </nav>
+
+        <!-- Tietokoneen ruudukko -->
+        <div class="grid-section">
+            <h2>Tietokoneen Ruudukko</h2>
+            <div class="grid" id="computerGrid"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
