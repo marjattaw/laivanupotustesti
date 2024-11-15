@@ -33,6 +33,12 @@ document.addEventListener("keydown", (event) => {
     }
 });
 
+// Vaihtaa laivan suunnan painikkeella
+function toggleShipDirection() {
+    isHorizontal = !isHorizontal;
+    messageElement.textContent = isHorizontal ? "Vaakasuuntainen laiva valittu" : "Pystysuuntainen laiva valittu";
+}
+
 // Äänitiedostot
 const hitSound = new Audio("voices/pommi.mp3");
 const missSound = new Audio("voices/hutipommi.mp3");
