@@ -35,7 +35,7 @@ document.addEventListener("keydown", (event) => {
 
 // Äänitiedostot
 const hitSound = new Audio("voices/pommi.mp3");
-const missSound = new Audio("voices/huti.mp3");
+const missSound = new Audio("voices/hutipommi.mp3");
 const winSound = new Audio("voices/win.mp3");
 const loseSound = new Audio("voices/lose.mp3");
 hitSound.preload = "auto";
@@ -162,7 +162,7 @@ function placePlayerShip(row, col, cell) {
         if (currentShipIndex >= ships.length) {
             messageElement.textContent = "Kaikki laivat asetettu! Aloita pelaaminen.";
             isPlacingShips = false;
-            placeShips(true);
+            placeShips(true); // Tietokoneen laivojen sijoittaminen
             isPlayerTurn = true;
         }
     } else {
@@ -256,7 +256,26 @@ function placeShip(row, col, size, direction, targetLocations) {
     }
 }
 
-// Lisää funktio pelilaivan sijoitusmahdollisuuden tarkistukseen
+// Tietokoneen ja pelaajan laivojen sijoitus
+function placeShips(isComputer) {
+    const targetLocations = isComputer ? computerShipLocations : playerShipLocations;
+
+    ships.forEach(ship => {
+        let placed = false;
+        while (!placed) {
+            const direction = Math.random() < 0.5 ? "horizontal" : "vertical";
+            const startRow = Math.floor(Math.random() * gridSize);
+            const startCol = Math.floor(Math.random() * gridSize);
+
+            if (canPlaceShip(startRow, startCol, ship.size, direction, targetLocations)) {
+                placeShip(startRow, startCol, ship.size, direction, targetLocations);
+                placed = true;
+            }
+        }
+    });
+}
+
+// Tarkistaa voiko laivan sijoittaa paikkaan
 function canPlaceShip(row, col, size, direction, targetLocations) {
     for (let i = 0; i < size; i++) {
         const currentRow = direction === "horizontal" ? row : row + i;
