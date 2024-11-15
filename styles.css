@@ -1,14 +1,15 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    background-image: url('images/meritaustakuva.jpg'); /* Polku taustakuvaan */
-    background-size: cover; /* Kattaa koko näytön */
-    background-position: center; /* Keskittää kuvan */
-    background-attachment: fixed; /* Kiinnittää kuvan vierityksessä */
+    background-image: url('images/meritaustakuva.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     color: #333;
     margin: 0;
     padding: 0;
 }
+
 h1 {
     color: #fff;
     font-size: 3em;
@@ -42,6 +43,7 @@ h2.ruudukko-otsikko {
     -webkit-text-fill-color: transparent;
     margin-bottom: 10px;
 }
+
 h2 {
     color: #555;
 }
@@ -51,23 +53,19 @@ p {
     color: #555;
 }
 
-/* Keskitetään ruudukot vaakatasoon ja laitetaan tilaa väliin */
 .game-container {
     display: flex;
     justify-content: center;
-    align-items: center; /* Kohdistaa kaikki keskelle samaan tasoon */
+    align-items: center;
     gap: 40px;
     margin-top: 20px;
 }
 
-/* Asetetaan ruudukot ja niiden otsikot pystyyn */
 .grid-section {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-
-/* Navigointipalkin tyylit */
 
 .controls {
     display: flex;
@@ -78,13 +76,12 @@ p {
     width: 150px;
     height: 390px;
     border: 2px solid #333;
-    background-color: rgba(255, 255, 255, 0.8); /* Valkoinen 80 % läpinäkyvyydellä */
+    background-color: rgba(255, 255, 255, 0.8);
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Painikkeet vaakatasoon hallintapalkissa */
 .controls button {
-    width: 100%; /* Asettaa painikkeiden leveyden täsmäämään palkin kanssa */
+    width: 100%;
     padding: 10px;
     font-size: 1em;
     color: #fff;
@@ -99,13 +96,12 @@ button:hover {
     background-color: #555;
 }
 
-
 .grid {
     display: grid;
-    grid-template-columns: repeat(11, 40px); /* 10 pelisaraketta + 1 kirjainsarake */
-    grid-template-rows: repeat(11, 40px); /* 10 riviä + 1 numerorivi */
+    grid-template-columns: repeat(11, 40px);
+    grid-template-rows: repeat(11, 40px);
     gap: 3px;
-    margin: 0; /* Poistetaan ylimääräiset marginaalit */
+    margin: 0;
     padding: 10px;
     background-color: #e6f7ff;
     border: 2px solid #333;
@@ -156,6 +152,43 @@ footer {
     text-align: center;
     color: #333;
     font-size: 0.9em;
-    background-color: rgba(255, 255, 255, 0.8); /* Läpikuultava tausta */
+    background-color: rgba(255, 255, 255, 0.8);
     padding: 5px 0;
+}
+
+/* Mobiilinäytöt */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2em;
+    }
+    
+    p.subtitle, h2.ruudukko-otsikko {
+        font-size: 1.2em;
+    }
+    
+    .grid {
+        grid-template-columns: repeat(11, 30px);
+        grid-template-rows: repeat(11, 30px);
+    }
+    
+    .label, .cell {
+        width: 30px;
+        height: 30px;
+    }
+
+    .controls {
+        width: 100px;
+        height: auto;
+        padding: 10px;
+    }
+    
+    .controls button {
+        font-size: 0.9em;
+        padding: 5px;
+    }
+
+    .game-container {
+        flex-direction: column;
+        gap: 20px;
+    }
 }
