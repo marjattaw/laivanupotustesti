@@ -8,13 +8,12 @@
 </head>
 <body>
     <h1>Johannan ja Marjatan Laivanupotuspeli</h1>
-    <p class="subtitle">Yritä löytää ja upottaa kaikki vastustajan laivat klikkaamalla ruutuja!</p>
-    
+    <p>Yritä löytää ja upottaa kaikki vastustajan laivat klikkaamalla ruutuja!</p>
 
     <div class="game-container">
         <!-- Pelaajan ruudukko -->
         <div class="grid-section">
-            <h2 class="ruudukko-otsikko">Pelaajan Ruudukko</h2>
+            <h2>Pelaajan Ruudukko</h2>
             <div class="grid" id="playerGrid"></div>
         </div>
 
@@ -23,17 +22,17 @@
             <button onclick="restartGame()">Aloita uusi peli</button>
             <button onclick="showRules()">Pelin säännöt</button>
             <button onclick="toggleBackgroundSound()">Taustaäänet päälle/pois</button>
+            <button onclick="toggleGameSounds()">Peliäänet päälle/pois</button>
             <p id="message"></p>
         </nav>
 
         <!-- Tietokoneen ruudukko -->
         <div class="grid-section">
-            <h2 class="ruudukko-otsikko">Tietokoneen Ruudukko</h2>
+            <h2>Tietokoneen Ruudukko</h2>
             <div class="grid" id="computerGrid"></div>
         </div>
     </div>
 
-    <!-- JavaScript-tiedosto ladataan tässä, jotta kaikki elementit ovat valmiina -->
     <script src="script.js"></script>
 </body>
 </html>

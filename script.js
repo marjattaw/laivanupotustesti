@@ -49,6 +49,7 @@ backgroundSound.loop = true;
 backgroundSound.volume = 0.5;
 
 let isBackgroundSoundOn = true;
+let isGameSoundsOn = true;
 
 function toggleBackgroundSound() {
     if (isBackgroundSoundOn) {
@@ -59,6 +60,19 @@ function toggleBackgroundSound() {
         backgroundSound.play();
         isBackgroundSoundOn = true;
         document.querySelector("button[onclick='toggleBackgroundSound()']").textContent = "Taustaäänet pois";
+    }
+}
+
+// Peliäänien päälle/pois-kytkentä
+function toggleGameSounds() {
+    isGameSoundsOn = !isGameSoundsOn;
+    document.querySelector("button[onclick='toggleGameSounds()']").textContent = isGameSoundsOn ? "Peliäänet pois" : "Peliäänet päälle";
+}
+
+// Soittaa äänen, jos peliäänet ovat päällä
+function playSound(sound) {
+    if (isGameSoundsOn) {
+        sound.play();
     }
 }
 
@@ -165,12 +179,12 @@ function checkWinCondition() {
 
     if (playerHits >= totalComputerShipCells) {
         messageElement.textContent = "Kaikki tietokoneen laivat upotettu! Voitit pelin!";
-        winSound.play();
+        playSound(winSound);
         endGame();
         return true;
     } else if (computerHits >= totalPlayerShipCells) {
         messageElement.textContent = "Tietokone upotti kaikki laivasi! Hävisit pelin.";
-        loseSound.play();
+        playSound(loseSound); // Häviöääni
         endGame();
         return true;
     }
@@ -188,12 +202,12 @@ function handlePlayerAttack(event) {
     if (computerShipLocations.some(loc => loc.row === row && loc.col === col)) {
         cell.classList.add("hit");
         messageElement.textContent = "Osuit tietokoneen laivaan! Jatka vuoroasi.";
-        hitSound.play();
+        playSound(hitSound);
         if (checkWinCondition()) return;
     } else {
         cell.classList.add("miss");
         messageElement.textContent = "Ohi meni! Nyt on tietokoneen vuoro.";
-        missSound.play();
+        playSound(missSound);
         isPlayerTurn = false;
         setTimeout(computerTurn, 1000);
     }
@@ -214,13 +228,13 @@ function computerTurn() {
     if (playerShipLocations.some(loc => loc.row === row && loc.col === col)) {
         cell.classList.add("hit");
         messageElement.textContent = "Tietokone osui laivaasi! Tietokone jatkaa vuoroaan.";
-        hitSound.play();
+        playSound(hitSound);
         if (checkWinCondition()) return;
         setTimeout(computerTurn, 1000);
     } else {
         cell.classList.add("miss");
         messageElement.textContent = "Tietokone ampui ohi. Nyt on sinun vuorosi.";
-        missSound.play();
+        playSound(missSound);
         isPlayerTurn = true;
     }
 }
