@@ -148,3 +148,14 @@ button:hover {
     background-color: #333;
     color: white;
 }
+
+footer {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    color: #333;
+    font-size: 0.9em;
+    background-color: rgba(255, 255, 255, 0.8); /* Läpikuultava tausta */
+    padding: 5px 0;
+}
