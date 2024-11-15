@@ -9,12 +9,39 @@ body {
     margin: 0;
     padding: 0;
 }
-
 h1 {
-    color: #333;
+    color: #fff;
+    font-size: 3em;
+    font-family: 'Arial', sans-serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    background: linear-gradient(90deg, #00B4DB, #0083B0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     margin-top: 20px;
+    margin-bottom: 10px;
 }
 
+p.subtitle {
+    color: #fff;
+    font-size: 1.5em;
+    font-family: 'Arial', sans-serif;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(90deg, #00B4DB, #0083B0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+}
+
+h2.ruudukko-otsikko {
+    color: #fff;
+    font-size: 1.8em;
+    font-family: 'Arial', sans-serif;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(90deg, #00B4DB, #0083B0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+}
 h2 {
     color: #555;
 }
