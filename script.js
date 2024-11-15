@@ -20,19 +20,18 @@ const ships = [
 let playerShipLocations = [];
 let computerShipLocations = [];
 let isPlayerTurn = true;
-let isPlacingShips = true; // Pelaaja asettaa ensin laivat
-let currentShipIndex = 0; // Seuraa asetettavaa laivaa
-let isHorizontal = true; // Oletusarvoisesti vaakasuora asetus
+let isPlacingShips = true;
+let currentShipIndex = 0;
+let isHorizontal = true;
 
 // Kuuntelee näppäimen painallusta suunnan vaihtamiseksi
 document.addEventListener("keydown", (event) => {
-    if (event.key === " ") {  // Välilyönti vaihtaa suunnan
+    if (event.key === " ") {
         isHorizontal = !isHorizontal;
         messageElement.textContent = isHorizontal ? "Vaakasuuntainen laiva valittu" : "Pystysuuntainen laiva valittu";
-        event.preventDefault();  // Estää sivun vierityksen välilyönnillä
+        event.preventDefault();
     }
 });
-
 
 // Äänitiedostot
 const hitSound = new Audio("voices/pommi.mp3");
@@ -52,8 +51,8 @@ function restartGame() {
     isPlayerTurn = true;
     isPlacingShips = true;
     currentShipIndex = 0;
-    createGrid(false); // Pelaajan ruudukko
-    createGrid(true); // Tietokoneen ruudukko
+    createGrid(false);
+    createGrid(true);
 }
 
 // Luo peliruudukko pelaajalle tai tietokoneelle
@@ -61,20 +60,16 @@ function createGrid(isComputer = false) {
     const alphabet = "ABCDEFGHIJ";
     const gridElement = isComputer ? computerGridElement : playerGridElement;
 
-    // Tyhjennä ruudukko
     gridElement.innerHTML = "";
 
-    // Luo ensimmäinen rivi: tyhjä kulma ja kirjaimet (A-J)
     const firstRow = document.createElement("div");
     firstRow.classList.add("row");
     gridElement.appendChild(firstRow);
     
-    // Tyhjä kulma
     const emptyCorner = document.createElement("div");
     emptyCorner.classList.add("label");
     firstRow.appendChild(emptyCorner);
 
-    // Kirjaimet yläreunaan (A-J)
     for (let i = 0; i < gridSize; i++) {
         const labelCell = document.createElement("div");
         labelCell.classList.add("label");
@@ -82,18 +77,15 @@ function createGrid(isComputer = false) {
         firstRow.appendChild(labelCell);
     }
 
-    // Luo loput ruudukosta, lisää numerot vasemmalle
     for (let row = 0; row < gridSize; row++) {
         const gridRow = document.createElement("div");
         gridRow.classList.add("row");
         
-        // Numero vasempaan reunaan
         const labelCell = document.createElement("div");
         labelCell.classList.add("label");
         labelCell.textContent = row + 1;
         gridRow.appendChild(labelCell);
 
-        // Peliruudukon solut
         for (let col = 0; col < gridSize; col++) {
             const cell = document.createElement("div");
             cell.classList.add("cell");
@@ -124,7 +116,6 @@ function placePlayerShip(row, col, cell) {
     if (canPlaceShip(row, col, ship.size, direction, playerShipLocations)) {
         placeShip(row, col, ship.size, direction, playerShipLocations);
 
-        // Merkitään laivan paikka ruudukkoon kokonaisena
         for (let i = 0; i < ship.size; i++) {
             const currentRow = direction === "horizontal" ? row : row + i;
             const currentCol = direction === "horizontal" ? col + i : col;
@@ -136,8 +127,8 @@ function placePlayerShip(row, col, cell) {
         if (currentShipIndex >= ships.length) {
             messageElement.textContent = "Kaikki laivat asetettu! Aloita pelaaminen.";
             isPlacingShips = false;
-            placeShips(true); // Tietokoneen laivat
-            isPlayerTurn = true; // Pelaaja aloittaa pelin
+            placeShips(true);
+            isPlayerTurn = true;
         }
     } else {
         messageElement.textContent = "Ei voi sijoittaa tähän! Yritä uudelleen.";
@@ -150,14 +141,18 @@ function canPlaceShip(row, col, size, direction, targetLocations) {
         const currentRow = direction === "horizontal" ? row : row + i;
         const currentCol = direction === "horizontal" ? col + i : col;
 
-        if (currentRow >= gridSize || currentCol >= gridSize || isAdjacentToShip(currentRow, currentCol, targetLocations)) {
+        if (
+            currentRow >= gridSize || 
+            currentCol >= gridSize || 
+            isAdjacentToShip(currentRow, currentCol, targetLocations)
+        ) {
             return false;
         }
     }
     return true;
 }
 
-// Tarkistaa, ovatko valitut ruudut lähellä toista laivaa
+// Tarkistaa, ovatko valitut ruudut lähellä toista laivaa, mukaan lukien kulmat
 function isAdjacentToShip(row, col, locations) {
     for (let i = -1; i <= 1; i++) {
         for (let j = -1; j <= 1; j++) {
@@ -190,23 +185,20 @@ function handlePlayerAttack(event) {
         cell.classList.add("hit");
         messageElement.textContent = "Osuit tietokoneen laivaan! Jatka vuoroasi.";
         hitSound.play();
-        checkWinCondition(); // Tarkistetaan voitto
-        return; // Pelaaja jatkaa, koska osui
+        if (checkWinCondition()) return;
     } else {
         cell.classList.add("miss");
         messageElement.textContent = "Ohi meni! Nyt on tietokoneen vuoro.";
         missSound.play();
+        isPlayerTurn = false;
+        setTimeout(computerTurn, 1000);
     }
-    
-    cell.removeEventListener("click", handlePlayerAttack); // Poistaa klikkauksen käsittelijän
-
-    isPlayerTurn = false;
-    setTimeout(computerTurn, 1000); // Viive ennen tietokoneen vuoroa
+    cell.removeEventListener("click", handlePlayerAttack);
 }
 
 // Tietokoneen vuoro
 function computerTurn() {
-    if (isPlayerTurn) return; // Estää toimimasta pelaajan vuorolla
+    if (isPlayerTurn) return;
 
     let row, col, cell;
     do {
@@ -219,16 +211,13 @@ function computerTurn() {
         cell.classList.add("hit");
         messageElement.textContent = "Tietokone osui laivaasi! Tietokone jatkaa vuoroaan.";
         hitSound.play();
-        checkWinCondition(); // Tarkistetaan voitto
-
-        // Odottaa hetken ja antaa tietokoneelle uuden vuoron
+        if (checkWinCondition()) return;
         setTimeout(computerTurn, 1000);
     } else {
         cell.classList.add("miss");
         messageElement.textContent = "Tietokone ampui ohi. Nyt on sinun vuorosi.";
         missSound.play();
-
-        isPlayerTurn = true; // Vaihdetaan vuoro takaisin pelaajalle
+        isPlayerTurn = true;
     }
 }
 
@@ -239,13 +228,16 @@ function checkWinCondition() {
     const totalPlayerShipCells = playerShipLocations.length;
     const totalComputerShipCells = computerShipLocations.length;
 
-    if (playerHits === totalComputerShipCells) {
+    if (playerHits >= totalComputerShipCells) {
         messageElement.textContent = "Kaikki tietokoneen laivat upotettu! Voitit pelin!";
         endGame();
-    } else if (computerHits === totalPlayerShipCells) {
+        return true;
+    } else if (computerHits >= totalPlayerShipCells) {
         messageElement.textContent = "Tietokone upotti kaikki laivasi! Hävisit pelin.";
         endGame();
+        return true;
     }
+    return false;
 }
 
 // Lopettaa pelin ja poistaa klikkaukset
@@ -284,33 +276,6 @@ function placeShips(isComputer = false) {
         }
     });
 }
-function showRules() {
-    window.open("rules.html", "_blank", "width=600,height=400");
-}
-const backgroundSound = new Audio("path/to/background-music.mp3");
-backgroundSound.loop = true; // Toistaa äänen jatkuvasti
-backgroundSound.volume = 0.5; // Asetetaan äänenvoimakkuus
-
-let isBackgroundSoundOn = true;
-
-// Funktio taustaäänen päälle/pois kytkemiseen
-function toggleBackgroundSound() {
-    if (isBackgroundSoundOn) {
-        backgroundSound.pause();
-        isBackgroundSoundOn = false;
-        document.querySelector("button[onclick='toggleBackgroundSound()']").textContent = "Taustaäänet päälle";
-    } else {
-        backgroundSound.play();
-        isBackgroundSoundOn = true;
-        document.querySelector("button[onclick='toggleBackgroundSound()']").textContent = "Taustaäänet pois";
-    }
-}
-
-// Käynnistetään taustaääni automaattisesti pelin alussa
-function startBackgroundSound() {
-    backgroundSound.play();
-}
-
 
 // Käynnistää pelin alussa
 restartGame();

@@ -1,7 +1,10 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    background-color: #f0f8ff;
+    background-image: url('images/meritaustakuva.jpg'); /* Polku taustakuvaan */
+    background-size: cover; /* Kattaa koko näytön */
+    background-position: center; /* Keskittää kuvan */
+    background-attachment: fixed; /* Kiinnittää kuvan vierityksessä */
     color: #333;
     margin: 0;
     padding: 0;
@@ -46,9 +49,9 @@ p {
     justify-content: space-between;
     padding: 20px;
     width: 150px;
-    height: 380px; /* Asetetaan kiinteä korkeus samaan kuin ruudukon korkeus */
+    height: 390px;
     border: 2px solid #333;
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.8); /* Valkoinen 80 % läpinäkyvyydellä */
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
