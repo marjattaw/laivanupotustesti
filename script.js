@@ -37,9 +37,30 @@ document.addEventListener("keydown", (event) => {
 const hitSound = new Audio("voices/pommi.mp3");
 const missSound = new Audio("voices/huti.mp3");
 const winSound = new Audio("voices/win.mp3");
+const loseSound = new Audio("voices/lose.mp3");
 hitSound.preload = "auto";
 missSound.preload = "auto";
 winSound.preload = "auto";
+loseSound.preload = "auto";
+
+// Taustaäänen päälle/pois-kytkentä
+const backgroundSound = new Audio("voices/tausta.mp3");
+backgroundSound.loop = true;
+backgroundSound.volume = 0.5;
+
+let isBackgroundSoundOn = true;
+
+function toggleBackgroundSound() {
+    if (isBackgroundSoundOn) {
+        backgroundSound.pause();
+        isBackgroundSoundOn = false;
+        document.querySelector("button[onclick='toggleBackgroundSound()']").textContent = "Taustaäänet päälle";
+    } else {
+        backgroundSound.play();
+        isBackgroundSoundOn = true;
+        document.querySelector("button[onclick='toggleBackgroundSound()']").textContent = "Taustaäänet pois";
+    }
+}
 
 // Funktio pelin uudelleenkäynnistykseen
 function restartGame() {
@@ -144,10 +165,12 @@ function checkWinCondition() {
 
     if (playerHits >= totalComputerShipCells) {
         messageElement.textContent = "Kaikki tietokoneen laivat upotettu! Voitit pelin!";
+        winSound.play();
         endGame();
         return true;
     } else if (computerHits >= totalPlayerShipCells) {
         messageElement.textContent = "Tietokone upotti kaikki laivasi! Hävisit pelin.";
+        loseSound.play();
         endGame();
         return true;
     }
@@ -208,7 +231,6 @@ function endGame() {
     cells.forEach(cell => {
         cell.removeEventListener("click", handlePlayerAttack);
     });
-    winSound.play();
 }
 
 // Sijoittaa laivan ruudukkoon
@@ -220,91 +242,40 @@ function placeShip(row, col, size, direction, targetLocations) {
     }
 }
 
-// Tietokoneen laivojen satunnainen sijoittaminen
-function placeShips(isComputer = false) {
-    const targetLocations = isComputer ? computerShipLocations : playerShipLocations;
-
-    ships.forEach(ship => {
-        let placed = false;
-        while (!placed) {
-            const direction = Math.random() < 0.5 ? "horizontal" : "vertical";
-            const startRow = Math.floor(Math.random() * gridSize);
-            const startCol = Math.floor(Math.random() * gridSize);
-
-            if (canPlaceShip(startRow, startCol, ship.size, direction, targetLocations)) {
-                placeShip(startRow, startCol, ship.size, direction, targetLocations);
-                placed = true;
-            }
-        }
-    });
-}
-
-// Funktio tarkistaa, voiko laivan sijoittaa sijaintiin (ei koske muita laivoja edes kulmittain)
+// Lisää funktio pelilaivan sijoitusmahdollisuuden tarkistukseen
 function canPlaceShip(row, col, size, direction, targetLocations) {
     for (let i = 0; i < size; i++) {
         const currentRow = direction === "horizontal" ? row : row + i;
         const currentCol = direction === "horizontal" ? col + i : col;
 
-        if (
-            currentRow >= gridSize || currentCol >= gridSize ||
-            isAdjacentToShip(currentRow, currentCol, targetLocations)
-        ) {
+        if (currentRow >= gridSize || currentCol >= gridSize) {
             return false;
+        }
+
+        for (let r = -1; r <= 1; r++) {
+            for (let c = -1; c <= 1; c++) {
+                const checkRow = currentRow + r;
+                const checkCol = currentCol + c;
+                if (
+                    checkRow >= 0 &&
+                    checkRow < gridSize &&
+                    checkCol >= 0 &&
+                    checkCol < gridSize &&
+                    targetLocations.some(loc => loc.row === checkRow && loc.col === checkCol)
+                ) {
+                    return false;
+                }
+            }
         }
     }
     return true;
 }
 
-// Funktio tarkistaa, ovatko valitut ruudut lähellä toista laivaa
-function isAdjacentToShip(row, col, locations) {
-    for (let i = -1; i <= 1; i++) {
-        for (let j = -1; j <= 1; j++) {
-            const adjacentRow = row + i;
-            const adjacentCol = col + j;
-
-            if (
-                adjacentRow >= 0 &&
-                adjacentRow < gridSize &&
-                adjacentCol >= 0 &&
-                adjacentCol < gridSize &&
-                locations.some(loc => loc.row === adjacentRow && loc.col === adjacentCol)
-            ) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-// Määritellään showRules-funktio
+// Lisää showRules-funktio
 function showRules() {
     window.open("rules.html", "_blank", "width=600,height=400");
 }
 
-// Määritellään toggleBackgroundSound-funktio
-let isBackgroundSoundOn = true;
-const backgroundSound = new Audio("voices/tausta.mp3");
-backgroundSound.loop = true;
-
-function toggleBackgroundSound() {
-    if (isBackgroundSoundOn) {
-        backgroundSound.pause();
-        isBackgroundSoundOn = false;
-        document.querySelector("button[onclick='toggleBackgroundSound()']").textContent = "Taustaäänet päälle";
-    } else {
-        backgroundSound.play();
-        isBackgroundSoundOn = true;
-        document.querySelector("button[onclick='toggleBackgroundSound()']").textContent = "Taustaäänet pois";
-    }
-}
-
-// Taustaäänen käynnistys pelin alussa
-function startBackgroundSound() {
-    backgroundSound.play().catch(error => {
-        console.log("Taustaääntä ei voitu toistaa automaattisesti: ", error);
-    });
-}
-
 // Käynnistää pelin alussa
 restartGame();
-startBackgroundSound();
+backgroundSound.play();
