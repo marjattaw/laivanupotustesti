@@ -74,9 +74,10 @@ p {
     justify-content: space-between;
     padding: 20px;
     width: 150px;
-    height: 390px;
-    border: 2px solid #333;
+    height: auto; /* Muuta kiinteä korkeus automaattiseksi */
+    min-height: 100%; /* Varmistaa, että laatikko venyy sisältönsä mukaan */
     background-color: rgba(255, 255, 255, 0.8);
+    border: 2px solid #333;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -90,6 +91,7 @@ p {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin: 10px 0; /* Tämä lisää välin ylä- ja alapuolelle */
 }
 
 button:hover {
@@ -227,4 +229,34 @@ footer {
     footer {
         font-size: 0.8em; /* Pienentää tekijänoikeustekstin kokoa */
     }
+}
+
+/* Animaatio, kun osutaan laivaan */
+@keyframes hitEffect {
+    0% { background-color: red; transform: scale(1); }
+    50% { transform: scale(1.1); background-color: #ff4d4d; }
+    100% { transform: scale(1); background-color: red; }
+}
+
+.cell.hit {
+    animation: hitEffect 0.5s ease-in-out;
+}
+
+/* Animaatio, kun ammutaan ohi */
+@keyframes missEffect {
+    0% { background-color: lightgray; transform: scale(1); }
+    50% { transform: scale(0.9); background-color: #d9d9d9; }
+    100% { transform: scale(1); background-color: lightgray; }
+}
+
+.cell.miss {
+    animation: missEffect 0.5s ease-in-out;
+}
+
+.cell.highlight {
+    background-color: rgba(0, 255, 0, 0.5); /* Vihreä korostus */
+}
+
+.cell.invalid {
+    background-color: rgba(255, 0, 0, 0.5); /* Punainen korostus */
 }

@@ -24,6 +24,11 @@
             <button onclick="toggleBackgroundSound()">Taustaäänet päälle/pois</button>
             <button onclick="toggleGameSounds()">Peliäänet päälle/pois</button>
             <button onclick="toggleShipDirection()">Vaihda laivan suunta</button>
+            
+            <!-- Äänenvoimakkuuden säädin -->
+            <label for="volumeSlider">Äänenvoimakkuus:</label>
+            <input id="volumeSlider" type="range" min="0" max="1" step="0.1" value="0.5" onchange="setBackgroundVolume(this.value)">
+
             <p id="message"></p>
         </nav>
 

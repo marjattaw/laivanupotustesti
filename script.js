@@ -81,7 +81,9 @@ function playSound(sound) {
         sound.play();
     }
 }
-
+function setBackgroundVolume(volume) {
+    backgroundSound.volume = volume;
+}
 // Funktio pelin uudelleenkäynnistykseen
 function restartGame() {
     playerGridElement.innerHTML = "";
@@ -97,6 +99,32 @@ function restartGame() {
 }
 
 // Luo peliruudukko pelaajalle tai tietokoneelle
+// Lisää esikatselun hallinta (korostus vihreällä/punaisella)
+function previewPlacement(row, col) {
+    if (!isPlacingShips || currentShipIndex >= ships.length) return;
+
+    const ship = ships[currentShipIndex];
+    const direction = isHorizontal ? "horizontal" : "vertical";
+    const isValid = canPlaceShip(row, col, ship.size, direction, playerShipLocations);
+
+    for (let i = 0; i < ship.size; i++) {
+        const currentRow = direction === "horizontal" ? row : row + i;
+        const currentCol = direction === "horizontal" ? col + i : col;
+        const cell = playerGridElement.querySelector(`.cell[data-row="${currentRow}"][data-col="${currentCol}"]`);
+
+        if (cell) {
+            cell.classList.add(isValid ? "highlight" : "invalid");
+        }
+    }
+}
+
+// Poistaa esikatselun korostukset
+function clearPreview() {
+    const highlightedCells = playerGridElement.querySelectorAll(".highlight, .invalid");
+    highlightedCells.forEach(cell => cell.classList.remove("highlight", "invalid"));
+}
+
+// Ruudukko
 function createGrid(isComputer = false) {
     const alphabet = "ABCDEFGHIJ";
     const gridElement = isComputer ? computerGridElement : playerGridElement;
@@ -106,7 +134,7 @@ function createGrid(isComputer = false) {
     const firstRow = document.createElement("div");
     firstRow.classList.add("row");
     gridElement.appendChild(firstRow);
-    
+
     const emptyCorner = document.createElement("div");
     emptyCorner.classList.add("label");
     firstRow.appendChild(emptyCorner);
@@ -121,7 +149,7 @@ function createGrid(isComputer = false) {
     for (let row = 0; row < gridSize; row++) {
         const gridRow = document.createElement("div");
         gridRow.classList.add("row");
-        
+
         const labelCell = document.createElement("div");
         labelCell.classList.add("label");
         labelCell.textContent = row + 1;
@@ -136,9 +164,9 @@ function createGrid(isComputer = false) {
             if (isComputer) {
                 cell.addEventListener("click", handlePlayerAttack);
             } else if (isPlacingShips) {
+                cell.addEventListener("mouseover", () => previewPlacement(row, col));
+                cell.addEventListener("mouseout", () => clearPreview());
                 cell.addEventListener("click", () => placePlayerShip(row, col, cell));
-            } else {
-                cell.classList.add("player-cell");
             }
 
             gridRow.appendChild(cell);
